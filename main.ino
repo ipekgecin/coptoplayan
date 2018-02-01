@@ -26,9 +26,11 @@
 //Motorlar
 #define sol_motor1 40
 #define sol_motor2 41
-#define sag_motor1 42
-#define sag_motor2 43
+#define sol_pwm 42
+#define sag_motor1 43
+#define sag_motor2 44
+#define sag_pwm 45
 //Servolar
-#define kapak_serv 44
-#define kol_serv 45
+#define kapak_serv 46
+#define kol_serv 47
 //-----------------------------------------------------------------------------------------------

@@ -15,7 +15,7 @@
 #define hs_echo 32
 #define hs_trig 33
 //Sağ Mesafe Sensörü
-#define sags_echo 34//
+#define sags_echo 34
 #define sags_trig 35
 //Sol Mesafe Sensörü
 #define sols_echo 36
@@ -25,10 +25,10 @@
 #define ons_trig 39
 //Motorlar
 #define sol_motor1 40
-#define sol_motor2 41
-#define sol_pwm 42
-#define sag_motor1 43
-#define sag_motor2 44
+#define sol_motor2 42
+#define sol_pwm 44
+#define sag_motor1 41
+#define sag_motor2 43
 #define sag_pwm 45
 //Servolar
 #define kapak_serv 46

@@ -5,9 +5,9 @@ Servo servokapak;
 
 void setup()
 {
-	servokol.attach(47);  // arduinonun 47. pinini çıkış yaptık.
+	servokol.attach(kol_serv);  // arduinonun 47. pinini çıkış yaptık.
 	servokol.write(0);  // servonun ilk pozisyon açısı
-	servokapak.attach(46); // arduinonun 46. pinini çıkış yaptık.
+	servokapak.attach(kapak_serv); // arduinonun 46. pinini çıkış yaptık.
 	servokapak.write(0); // servo kapağın ilk pozisyonu
 }
 

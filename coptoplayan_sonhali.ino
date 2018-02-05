@@ -47,16 +47,17 @@ int sure_dvr;
 int mesafe_dvr;
 int sol_hiz;
 int sag_hiz;
-int hizmax;
-int kp = 1 ; //bunlar eklenecek
-int ki = 1 ;
-int kd = 1 ;
+int HIZMAX;
+int KP = 1 ; //bunlar eklenecek
+int KI = 1 ;
+int KD = 1 ;
 int sure;
 int solmesafe;
 int pidTerm;
 
 //--------------------------------------------------------------------------Motor Hareketleri
-void setup() {
+void setup() 
+{
   // put your setup code here, to run once:
   kapak_serv.attach(46);
   kapak_serv.write(10);
@@ -70,12 +71,6 @@ void setup() {
   servokol.write(0);  // servonun ilk pozisyon açısı
   kapak_serv.attach(46); // arduinonun 46. pinini çıkış yaptık.
   kapak_serv.write(0); // servo kapağın ilk pozisyonu
-
-
-
-
-
-
 }
 
 void dur()
@@ -113,7 +108,8 @@ void sagadon()
   digitalWrite(sag_pwm, HIGH);
 }
 //----------------------------------------------------------------Mesafe ölçümü
-void cope_mesafe() {
+void cope_mesafe() 
+{
   digitalWrite(hs_trig, HIGH);
   delay(10);
   digitalWrite(hs_trig, LOW);
@@ -121,7 +117,8 @@ void cope_mesafe() {
   sure_hs = pulseIn(hs_echo, HIGH);
   mesafe_hs = sure_hs / 29.1 / 2;
 }
-void duvar_mesafe() {
+void duvar_mesafe() 
+{
   digitalWrite(dvr_trig, HIGH);
   delay(10);
   digitalWrite(dvr_trig, LOW);
@@ -130,7 +127,8 @@ void duvar_mesafe() {
   mesafe_dvr = sure_dvr / 29.1 / 2;
 }
 //-----------------------------------------------------------------Çöp bul
-void cop_bul() {
+void cop_bul() 
+{
   ileri();
   duvar_mesafe();
   cope_mesafe();
@@ -155,16 +153,19 @@ void cop_bul() {
   }
 }
 //--------------------------------------------------------------------Çöp al
-void cop_al() {
+void cop_al() 
+{
   kapak_serv.write(10);
   delay(1000);
 }
 //----------------------------------------------------------------------Çöp renk oku
-void find_copcolor() {
+void find_copcolor() 
+{
   // Setting red filtered photodiodes to be read
   char color;
   int red = 0, green = 0, blue = 0;
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) 
+  {
     digitalWrite(hs_S2, LOW);
     digitalWrite(hs_S3, LOW);
     redFrequency = pulseIn(hs_SOut, LOW);
@@ -206,7 +207,6 @@ void find_copcolor() {
 }
 
 //--------------------------------------------------------------------------------------------------------------------pid
-
 void copuatma()
 {
   sol_hiz = 1; // buraya başlangıç değeri girilecek
@@ -222,9 +222,8 @@ void copuatma()
 
   soltakip();
 }
-
-
-int mesafeokuma(int trig, int echo) {
+int mesafeokuma(int trig, int echo)
+{
   digitalWrite(trig, HIGH);
   delay(10);
   digitalWrite(trig, LOW);
@@ -236,27 +235,29 @@ int mesafeokuma(int trig, int echo) {
   return solmesafe;
 }
 
-int pid(int ideal, int solmesafe) {
+int pid(int ideal, int solmesafe) 
+{
   float pidTerm;
   int hata;
   static int son_hata;
   static int toplam_hata;
   hata = ideal - solmesafe;
   toplam_hata += hata;
-  pidTerm = (hata) * kp + (hata - son_hata) * kd + toplam_hata * ki;
+  pidTerm = (hata) * KP + (hata - son_hata) * KD + toplam_hata * KI;
   son_hata = hata;
   return (int(pidTerm));
 }
 
-void soltakip() {
-  if ( pidTerm < -hizmax)          // pid değerinin fazla yükselmesini veya fazla azalmasını engellemek için
+void soltakip() 
+{
+  if ( pidTerm < -HIZMAX)          // pid değerinin fazla yükselmesini veya fazla azalmasını engellemek için
   {
-    pidTerm = -hizmax;
+    pidTerm = -HIZMAX;
   }
 
-  if ( pidTerm > hizmax)
+  if ( pidTerm > HIZMAX)
   {
-    pidTerm = hizmax;
+    pidTerm = HIZMAX;
   }
 
   if (pidTerm < 0 ) //mesafe > ideal
@@ -278,7 +279,6 @@ void soltakip() {
   }
 }
 //---------------------------------------------------------------------------------- copu bırakma
-
 void copubirakma()
 {
   servokol.write(1); //x kolun kalkmış haldeki pozisyonu
@@ -288,13 +288,7 @@ void copubirakma()
   servokol.write(1); //x kolun inmiş haldeki pozisyonu
 }
 
-
-
 void loop() {
-  // put your main code here, to run repeatedly:
   cop_bul();
-
   copubirakma();
-  
-
 }

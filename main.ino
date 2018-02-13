@@ -23,6 +23,9 @@
 //Ön Mesafe Sensörü
 #define ons_echo 38
 #define ons_trig 39
+//Duvar Mesafe Sensörü
+#define dvr_echo 48
+#define dvr_trig 49
 //Motorlar
 #define sol_motor1 40
 #define sol_motor2 42
@@ -31,6 +34,7 @@
 #define sag_motor2 43
 #define sag_pwm 45
 //Servolar
-#define kapak_serv 46
+#define kapak_serv 46 //sağ
+#define kapak_serv 51 //sol
 #define kol_serv 47
 //-----------------------------------------------------------------------------------------------

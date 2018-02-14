@@ -45,15 +45,15 @@ Servo servokol;
 
 //Sol Mesafe Sensörü
 
-#define sols_echo 36
+#define sols_echo 38
 
-#define sols_trig 37
+#define sols_trig 39
 
 //Ön Mesafe Sensörü
 
-#define ons_echo 38
+#define ons_echo 36
 
-#define ons_trig 39
+#define ons_trig 37
 
 //Motorlar
 

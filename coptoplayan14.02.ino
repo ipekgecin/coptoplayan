@@ -37,15 +37,15 @@ Servo servokol;
 
 #define hs_trig 33
 
-//Sağ Mesafe Sensörü
+//SOL ON Mesafe Sensörü
 
 #define sags_echo 34
 
 #define sags_trig 35
 
-//Sol Mesafe Sensörü
+//Sol ARKAMesafe Sensörü
 
-#define sols_echo 38
+#define sols_echo 38 
 
 #define sols_trig 39
 

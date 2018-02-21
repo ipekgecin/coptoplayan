@@ -1,18 +1,18 @@
-#define sags_echo 34
-#define sags_trig 35
+#define solon_echo 34
+#define solon_trig 35
 //Sol ARKAMesafe Sensörü
-#define sols_echo 38 
-#define sols_trig 39
+#define solarka_echo 38 
+#define solarka_trig 39
 //Ön Mesafe Sensörü
 #define ons_echo 36
 #define ons_trig 37
 //Motorlar
-#define sag_motor1 40 // İLERİ sağ
+#define sol_motor1 40 // İLERİ sağ
 #define sol_motor2 42 //SOL GERİ
-#define sag_pwm 44 // SAG pwm
-#define sag_motor2 41 //GERİ sağ
-#define sol_motor1 43 //SOL İLERİ
-#define sol_pwm 45 //SOL pwm
+#define sol_pwm 44 // SAG pwm
+#define sag_motor1 41 //GERİ sağ
+#define sag_motor2 43 //SOL İLERİ
+#define sag_pwm 45 //SOL pwm
 #define pwm 50
 void setup(){
   pinMode(sag_pwm,OUTPUT);
@@ -21,20 +21,20 @@ void setup(){
   pinMode(sol_pwm,OUTPUT);
   pinMode(sol_motor1,OUTPUT);
   pinMode(sol_motor2,OUTPUT);                         //for motor driver with 2 dir pins
-  pinMode(sags_trig,OUTPUT);
-  pinMode(sags_echo,INPUT);
-  pinMode(sols_trig,OUTPUT);
-  pinMode(sols_echo,INPUT);
+  pinMode(solon_trig,OUTPUT);
+  pinMode(solon_echo,INPUT);
+  pinMode(solarka_trig,OUTPUT);
+  pinMode(solarka_echo,INPUT);
   Serial.begin(9600);
 }
 int solonsensor(){
   long sure, mesafe;
-  digitalWrite(sags_trig, LOW);
+  digitalWrite(solon_trig, LOW);
   delayMicroseconds(2);
-  digitalWrite(sags_trig, HIGH);
+  digitalWrite(solon_trig, HIGH);
   delayMicroseconds(10);
-  digitalWrite(sags_trig, LOW);
-  sure = pulseIn(sags_echo, HIGH);
+  digitalWrite(solon_trig, LOW);
+  sure = pulseIn(solon_echo, HIGH);
   mesafe = (sure/2) / 29.1;
   if (mesafe > 200 || mesafe < 0){
   Serial.println("Menzil Disi");
@@ -47,12 +47,12 @@ int solonsensor(){
 }
 int solarkasensor(){
   long sure, mesafe;
-  digitalWrite(sols_trig, LOW);
+  digitalWrite(solarka_trig, LOW);
   delayMicroseconds(2);
-  digitalWrite(sols_trig, HIGH);
+  digitalWrite(solarka_trig, HIGH);
   delayMicroseconds(10);
-  digitalWrite(sols_trig, LOW);
-  sure = pulseIn(sols_echo, HIGH);
+  digitalWrite(solarka_trig, LOW);
+  sure = pulseIn(solarka_echo, HIGH);
   mesafe = (sure/2) / 29.1;
   if (mesafe > 200 || mesafe < 0){
   Serial.println("Menzil Disi");

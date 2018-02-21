@@ -898,7 +898,7 @@ void loop() {
 
   kutubul ();
 
-  copubirakma();
+  
 
 }
 

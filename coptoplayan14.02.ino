@@ -304,6 +304,46 @@ void sagadon()
   digitalWrite(sag_motor2, HIGH);
 
   delay(1000);
+   
+   
+   pinMode(hs_trig, OUTPUT); 
+   
+   pinMode(hs_echo,INPUT); 
+  
+   Serial.begin(9600); 
+   
+   
+   
+   
+   pinMode(solon_trig, OUTPUT); 
+   
+   pinMode(solon_echo,INPUT); 
+  
+   Serial.begin(9600); 
+   
+   
+   pinMode(solarka_trig, OUTPUT); 
+   
+   pinMode(solarka_echo,INPUT); 
+  
+   Serial.begin(9600); 
+   
+   
+   
+   pinMode(ons_trig, OUTPUT); 
+   
+   pinMode(ons_echo,INPUT); 
+  
+   Serial.begin(9600); 
+   
+   
+   pinMode(dvr_trig, OUTPUT); 
+   
+   pinMode(dvr_echo,INPUT); 
+  
+   Serial.begin(9600); 
+   
+   
 
   
  }

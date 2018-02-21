@@ -57,17 +57,17 @@ Servo servokol;
 
 //Motorlar
 
-#define sol_motor1 40
+#define sol_motor1 40 // İLERİ sağ
 
-#define sol_motor2 42
+#define sol_motor2 42 //SOL GERİ
 
-#define sol_pwm 44
+#define sag_pwm 44 // SAG pwm
 
-#define sag_motor1 41
+#define sag_motor2 41 //GERİ sağ
 
-#define sag_motor2 43
+#define sol_motor1 43 //SOL İLERİ
 
-#define sag_pwm 45
+#define sol_pwm 45 //SOL pwm
 
 
 //Duvar Mesafe Sensörü

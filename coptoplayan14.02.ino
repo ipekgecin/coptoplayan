@@ -65,9 +65,9 @@ Servo servokol;
 
 #define sag_motor1 41 //GERİ sağ
 
-#define sol_motor2 43 //SOL İLERİ
+#define sag_motor2 43 //SOL İLERİ
 
-#define sol_pwm 45 //SOL pwm
+#define sag_pwm 45 //SOL pwm
 
 
 //Duvar Mesafe Sensörü
@@ -154,7 +154,7 @@ void setup()
 
   servokol.write(0);  // servonun ilk pozisyon açısı
 
-  kapak_serv1.attach(46); /
+  kapak_serv1.attach(46); 
 
    kapak_serv2.attach(47); // sol servo.
    
@@ -173,7 +173,7 @@ void setup()
   
   pinMode(ks_S3, OUTPUT);
   
-  pinMode(ks_sOut, INPUT);
+  pinMode(ks_SOut, INPUT);
   
   // Setting frequency-scaling to 20%
   
@@ -194,7 +194,7 @@ void setup()
   
   pinMode(hs_S3, OUTPUT);
   
-  pinMode(hs_sOut, INPUT);
+  pinMode(hs_SOut, INPUT);
   
   // Setting frequency-scaling to 20%
   

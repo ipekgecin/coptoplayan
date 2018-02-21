@@ -72,9 +72,9 @@ Servo servokol;
 
 //Duvar Mesafe Sensörü
 
-#define dvr_echo 49
+#define dvr_echo 48
 
-#define dvr_trig 50
+#define dvr_trig 49
 
 int redFrequency = 0;
 
@@ -150,11 +150,11 @@ void setup()
 
 
 
-  servokol.attach(48);  // arduinonun 47. pinini çıkış yaptık.
+  servokol.attach(51);  
 
   servokol.write(0);  // servonun ilk pozisyon açısı
 
-  kapak_serv1.attach(46); // arduinonun 46. pinini çıkış yaptık.sağ servo
+  kapak_serv1.attach(46); /
 
    kapak_serv2.attach(47); // sol servo.
    
@@ -251,6 +251,9 @@ void ileri()
 void soladon()
 
 {
+  analogWrite(sol_pwm,sol_hiz);
+
+  analogWrite(sag_pwm,sag_hiz);
 
   digitalWrite(sol_motor1, LOW);
 
@@ -260,16 +263,16 @@ void soladon()
 
   digitalWrite(sag_motor2, LOW);
 
-  analogWrite(sol_pwm,sol_hiz);
-
-  analogWrite(sag_pwm,sag_hiz);
-
+  
 }
 
 void sagadon()
 
 {
-
+  analogWrite(sol_pwm,sol_hiz);
+  
+  analogWrite(sag_pwm,sag_hiz);
+   
   digitalWrite(sol_motor1, HIGH);
 
   digitalWrite(sol_motor2, LOW);
@@ -280,14 +283,18 @@ void sagadon()
 
   delay(1000);
 
-  analogWrite(sol_pwm,sol_hiz);
 
-  analogWrite(sag_pwm,sag_hiz);
+ 
 
 }
 
  void geri () 
  { 
+   
+  analogWrite(sol_pwm,sol_hiz);
+
+  analogWrite(sag_pwm,sag_hiz);
+
   digitalWrite(sol_motor1, LOW);
 
   digitalWrite(sol_motor2, HIGH);
@@ -298,10 +305,7 @@ void sagadon()
 
   delay(1000);
 
-  analogWrite(sol_pwm,sol_hiz);
-
-  analogWrite(sag_pwm,sag_hiz);
-
+  
  }
 
 

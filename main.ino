@@ -15,11 +15,11 @@
 #define hs_echo 32
 #define hs_trig 33
 //Sağ Mesafe Sensörü
-#define sags_echo 34
-#define sags_trig 35
+#define solon_echo 34
+#define solon_trig 35
 //Sol Mesafe Sensörü
-#define sols_echo 36
-#define sols_trig 37
+#define solarka_echo 36
+#define solarka_trig 37
 //Ön Mesafe Sensörü
 #define ons_echo 38
 #define ons_trig 39
@@ -35,6 +35,6 @@
 #define sag_pwm 45
 //Servolar
 #define kapak_serv 46 //sağ
-#define kapak_serv 51 //sol
-#define kol_serv 47
+#define kapak_serv 47 //sol
+#define kol_serv 51
 //-----------------------------------------------------------------------------------------------

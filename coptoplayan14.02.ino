@@ -161,6 +161,49 @@ void setup()
   kapak_serv2.write(180); // servo kapağın ilk pozisyonu 
 
   kapak_serv1.write(0); // servo kapağın ilk pozisyonu
+  
+  
+  
+  
+  pinMode(ks_S0, OUTPUT);
+  
+  pinMode(ks_S1, OUTPUT);
+  
+  pinMode(ks_S2, OUTPUT);
+  
+  pinMode(ks_S3, OUTPUT);
+  
+  pinMode(ks_sOut, INPUT);
+  
+  // Setting frequency-scaling to 20%
+  
+  digitalWrite(ks_S0,HIGH);
+  
+  digitalWrite(ks_S1,LOW);
+  
+  Serial.begin(9600);
+  
+  
+  
+  
+  pinMode(hs_S0, OUTPUT);
+  
+  pinMode(hs_S1, OUTPUT);
+  
+  pinMode(hs_S2, OUTPUT);
+  
+  pinMode(hs_S3, OUTPUT);
+  
+  pinMode(hs_sOut, INPUT);
+  
+  // Setting frequency-scaling to 20%
+  
+  digitalWrite(hs_S0,HIGH);
+  
+  digitalWrite(hs_S1,LOW);
+  
+  Serial.begin(9600);
+
 
 }
 

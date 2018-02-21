@@ -61,11 +61,11 @@ Servo servokol;
 
 #define sol_motor2 42 //SOL GERİ
 
-#define sag_pwm 44 // SAG pwm
+#define sol_pwm 44 // SAG pwm
 
-#define sag_motor2 41 //GERİ sağ
+#define sag_motor1 41 //GERİ sağ
 
-#define sol_motor1 43 //SOL İLERİ
+#define sol_motor2 43 //SOL İLERİ
 
 #define sol_pwm 45 //SOL pwm
 
@@ -905,6 +905,3 @@ void loop() {
  
  
  
-
-
-

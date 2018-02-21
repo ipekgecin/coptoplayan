@@ -39,15 +39,15 @@ Servo servokol;
 
 //SOL ON Mesafe Sensörü
 
-#define sags_echo 34
+#define solon_echo 34
 
-#define sags_trig 35
+#define solon_trig 35
 
 //Sol ARKAMesafe Sensörü
 
-#define sols_echo 38 
+#define solarka_echo 38 
 
-#define sols_trig 39
+#define solarka_trig 39
 
 //Ön Mesafe Sensörü
 
@@ -665,6 +665,7 @@ int pid(int ideal, int solmesafe)
   static int son_hata;
 
   static int toplam_hata;
+  
 
   hata = ideal - solmesafe;
 

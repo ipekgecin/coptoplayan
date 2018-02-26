@@ -1,6 +1,6 @@
 //Sol ON Mesafe Sensörü
-#define solons_echo 34
-#define solons_trig 35
+#define solons_echo 35
+#define solons_trig 34
 //Sol ARKA Mesafe Sensörü
 #define solarkas_echo 38
 #define solarkas_trig 39
@@ -14,14 +14,22 @@
 #define arka_echo 36
 #define arka_trig 37
 //Motorlar
-#define sag_motor1 40 // İLERİ sağ
-#define sol_motor2 42 //SOL GERİ
+#define sag_motor1 42 // İLERİ sağ
+#define sag_motor2 40 //GERİ sağ
 #define sag_pwm 44 // SAG pwm
-#define sag_motor2 41 //GERİ sağ
 #define sol_motor1 43 //SOL İLERİ
+#define sol_motor2 41 //SOL GERİ
 #define sol_pwm 45 //SOL pwm
-#define pwm 90
-#define kp 14
+
+
+#define pwm 60
+#define kp 8
+#define ideal 10
+unsigned long t = 0;
+int fark;
+int fark2 = 0;
+int kd = 1;
+int hata = 0;
 
 void duvartakip(int x)
 {
@@ -29,10 +37,11 @@ void duvartakip(int x)
   digitalWrite(sol_motor2, HIGH);
   digitalWrite(sag_motor1, LOW);
   digitalWrite(sag_motor2, HIGH);
-  analogWrite(sol_pwm,pwm+x);
-  analogWrite(sag_pwm,pwm-x);
+  analogWrite(sol_pwm, pwm - x);
+  analogWrite(sag_pwm, pwm + x);//+ 5 i sildik 20.05
 }
 void ileri() { //TAMAM
+
   digitalWrite(sol_motor1, HIGH);
   digitalWrite(sol_motor2, LOW);
   digitalWrite(sag_motor1, HIGH);
@@ -70,9 +79,8 @@ void sol() { //TAMAM
   digitalWrite(sol_motor2, HIGH);
   digitalWrite(sag_motor1, HIGH);
   digitalWrite(sag_motor2, LOW);
-  analogWrite(sol_pwm, pwm);
-  analogWrite(sag_pwm, pwm);
-  delay(100);
+  analogWrite(sol_pwm, pwm-5);
+  analogWrite(sag_pwm, pwm-5);
 }
 void sag() { //TAMAM
   digitalWrite(sol_motor1, HIGH);
@@ -84,14 +92,13 @@ void sag() { //TAMAM
   delay(100);
 }
 
-void duvarayaklas() {
-  digitalWrite(sol_motor1, LOW);
-  digitalWrite(sol_motor2, HIGH);
-  digitalWrite(sag_motor1, LOW);
-  digitalWrite(sag_motor2, HIGH);
-  analogWrite(sol_pwm, pwm);
-  analogWrite(sag_pwm, pwm + 50);
-  delay(100);
+void duvarayaklas(int x) {
+  digitalWrite(sol_motor1, HIGH);
+  digitalWrite(sol_motor2, LOW);
+  digitalWrite(sag_motor1, HIGH);
+  digitalWrite(sag_motor2, LOW);
+  analogWrite(sol_pwm, pwm - x);
+  analogWrite(sag_pwm, pwm + x);//+ 5 i sildik 20.05
 }
 int haznesensor() { //TAMAM
   delay(10);
@@ -188,40 +195,50 @@ int solarkasensor() { //TAMAM
     return mesafe;
   }
 }
-void copat(){
-  if (solarkasensor()<=15){
-    int fark= solonsensor()-solarkasensor();
-    fark=fark*kp;
-    duvartakip(fark);
-  }else{
- 
-        digitalWrite(sol_motor1, LOW);
-        digitalWrite(sol_motor2, HIGH);
-        digitalWrite(sag_motor1, LOW);
-        digitalWrite(sag_motor2, HIGH);
-        analogWrite(sol_pwm,50);
-        analogWrite(sag_pwm,150);
-        delay(200);
-        digitalWrite(sol_motor1, LOW);
-        digitalWrite(sol_motor2, HIGH);
-        digitalWrite(sag_motor1, LOW);
-        digitalWrite(sag_motor2, LOW);
-        analogWrite(sol_pwm,100);
-        analogWrite(sag_pwm,50);
-        delay(100);
-        int fark= solonsensor()-solarkasensor();
-        fark=fark*5;
-        duvartakip(fark);
-        delay(50);
+void copat() {
+  int arka = arkasensor();
+  if (arka <= 13) {
+    fren();
+    while (1) {
+      sol();
+      if ((solonsensor - solarkasensor() < 2)||(solarkasensor()-solonsensor()<2)) {
+        sol();
+        delay(400);
+        fren();
+        dur();
+        delay(250);
+
+        if ((solonsensor() - solarkasensor() < 5) && !(arkasensor() < 10) && (solarkasensor() < 15) && (solonsensor() < 15)) {
+        break;
     }
+        
+    } 
+  }
+} else {
+  if (solarkasensor() <= ideal) {
+      fark = solarkasensor() - solonsensor();
+      fark = fark * kp;
+      duvartakip(fark);
+    } else {
+      t = millis();
+      fark =  ideal - solarkasensor();
+      hata = (fark2) * 5 + kd * ((fark - fark2) / t);
+      fark2 = fark;
+      duvartakip(-hata);
+      //delay(100);
+      //duvarayaklas(-hata);
+      //delay(25);
+    }
+  }
+
 }
-void setup(){
-  pinMode(sag_pwm,OUTPUT);
-  pinMode(sag_motor1,OUTPUT);
-  pinMode(sag_motor2,OUTPUT);
-  pinMode(sol_pwm,OUTPUT);
-  pinMode(sol_motor1,OUTPUT);
-  pinMode(sol_motor2,OUTPUT);                         //for motor driver with 2 dir pins
+void setup() {
+  pinMode(sag_pwm, OUTPUT);
+  pinMode(sag_motor1, OUTPUT);
+  pinMode(sag_motor2, OUTPUT);
+  pinMode(sol_pwm, OUTPUT);
+  pinMode(sol_motor1, OUTPUT);
+  pinMode(sol_motor2, OUTPUT);                        //for motor driver with 2 dir pins
   pinMode(hs_trig, OUTPUT);
   pinMode(hs_echo, INPUT);
   pinMode(dvr_trig, OUTPUT);
@@ -233,9 +250,9 @@ void setup(){
   pinMode(solons_echo, INPUT);
   pinMode(solarkas_trig, OUTPUT);
   pinMode(solarkas_echo, INPUT);
-  
+
   Serial.begin(9600);
 }
-void loop(){
-copat();
+void loop() {
+  copat();
 }

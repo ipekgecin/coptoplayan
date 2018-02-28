@@ -384,10 +384,10 @@ void copara() {
 }
 void kutuara() {
   arka = arkasensor();
-  delay(10);
-  solon = solonsensor();
-  delay(10);
-  solarka = solarkasensor();
+//  delay(10);
+//  solon = solonsensor();
+//  delay(10);
+//  solarka = solarkasensor();
   if (arka <= 10) { // tamam
     fren();
     // bes_cm(arka);
@@ -443,7 +443,7 @@ void kutuara() {
       int solonmod = solonsensor() % 30;
       int solarkamod = solarkasensor() % 30;
       int pid;
-      while (state == 0) {
+      while (state == 0) { // Duvardan sol arka sensorü boşa çıkartırken
         solonmod = solonsensor() % 30;
         solarkamod = solarkasensor() % 30;
         pid = (solarkamod - solonmod) * 5;
@@ -451,7 +451,7 @@ void kutuara() {
         if (solarkasensor() > 20 && solonsensor() > 20) {
           state++;
           geri();
-          delay(850);
+          delay(800);
           fren();
           dur();
           delay(20);
@@ -475,6 +475,7 @@ void kutuara() {
           geri();
           delay(100);
           fren();
+          dur();
           break;
         }
 

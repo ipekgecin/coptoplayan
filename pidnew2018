@@ -39,13 +39,19 @@ Servo servokol;
 #define ks_S3 29
 #define ks_SOut 31
 
-#define pwm 60
+#define pwm 40
 #define kp 6
 #define ideal 7
 unsigned long t = 0;
 int fark;
 int fark2 = 0;
 int hata = 0;
+int arka;
+int solon;
+int solarka;
+int duvar;
+int hazne;
+int state = 0;
 
 
 void duvartakip(int x)
@@ -55,7 +61,7 @@ void duvartakip(int x)
   digitalWrite(sag_motor1, LOW);
   digitalWrite(sag_motor2, HIGH);
   analogWrite(sol_pwm, pwm - x);
-  analogWrite(sag_pwm, pwm + x + 5); //+ 5 i sildik 20.05
+  analogWrite(sag_pwm, pwm + x); //+ 5 i sildik 20.05
 }
 void ileri() { //TAMAM
 
@@ -87,8 +93,8 @@ void fren() { //TAMAM
   digitalWrite(sol_motor2, !digitalRead(sol_motor2));
   digitalWrite(sag_motor1, !digitalRead(sag_motor1));
   digitalWrite(sag_motor2, !digitalRead(sag_motor2));
-  analogWrite(sol_pwm, 200);
-  analogWrite(sag_pwm, 200);
+  analogWrite(sol_pwm, 2*pwm);
+  analogWrite(sag_pwm, 2*pwm);
   delay(20);
 }
 void sol() { //TAMAM
@@ -377,21 +383,23 @@ void copara() {
   }
 }
 void kutuara() {
-  int arka = arkasensor();
-  delay(10);
-  int solon = solonsensor();
-  delay(10);
-  int solarka = solarkasensor();
+  arka = arkasensor();
+//  delay(10);
+//  solon = solonsensor();
+//  delay(10);
+//  solarka = solarkasensor();
   if (arka <= 10) { // tamam
     fren();
+    dur();
+    delay(200);
     // bes_cm(arka);
     sol();
     delay(600);
     while (1) {
       arka = arkasensor();
-      delay(10);
+      //delay(10);
       solon = solonsensor();
-      delay(10);
+      //delay(10);
       solarka = solarkasensor();
       sol();
       if ((solon - solarka < 2) || (solarka - solon < 2)) {
@@ -434,33 +442,59 @@ void kutuara() {
         delay(100);
       }
     } else {
-      int i = 0;
-      ileri();
-      delay(300);
-      fren();
-      while (i == 0) {
-        sag();
-        delay(400);
-        fren();
-        dur();
-        delay(250);
-        if (solonsensor() - solarkasensor() < 40) {
-          i++;
-        }
-        while (i == 1);
-        geri();
-        delay(100);
-        sag();
-        delay(100);
-        geri();
-        if (solarkasensor() - solonsensor() < 5) {
-          i = 0;
+      int solonmod = solonsensor() % 30;
+      int solarkamod = solarkasensor() % 30;
+      int pid;
+      while (state == 0) { // Duvardan sol arka sensorü boşa çıkartırken
+        solonmod = solonsensor() % 30;
+        solarkamod = solarkasensor() % 30;
+        pid = (solarkamod - solonmod) * 5;
+        //duvartakip(-pid);
+        duvartakip(-pid);
+        if (solarkasensor() > 20 && solonsensor() > 20) {
+          state++;
+          fren();
+          dur();
+          delay(50);
+          geri();
+          delay(800);
+          fren();
+          dur();
+          delay(20);
           break;
         }
+      }
+      delay(200);
+      sag();
+      delay(700);
+      while (state == 1) { // Sağa dönme
+        sag();
+        delay(50);
+        fren();
+        dur();
+        delay(10);
+        solonmod=solonsensor()%30;
+        solarkamod=solarkasensor()%30;
+        if (solonmod-solarkamod<=2 ) {
+          state=0;
+          pid=solarkasensor()%30-solonsensor()%30;
+          duvartakip(pid);
+          fren();
+          dur();
+          delay(50);
+          geri();
+          delay(20);
+          fren();
+          dur();
+          delay(50);
+          break;
+        }
+
       }
     }
   }
 }
+
 
 void setup() {
   pinMode(sag_pwm, OUTPUT);
@@ -503,14 +537,14 @@ void setup() {
   kapak_sol.attach(47);
   kapak_sol.write(180); // servo kapağın ilk pozisyonu
   servokol.attach(51);
-  servokol.write(0);  // servonun ilk pozisyon açısı
-
+  servokol.write(150);  // servonun ilk pozisyon açısı
+  // delY 50 HERBİR İ DEN SONRA FORUN İÇİNDE
   Serial.begin(9600);
 }
 void loop() {
- kutuara();
+  kutuara();
 }
- 
- 
 
- 
+
+
+

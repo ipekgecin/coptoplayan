@@ -39,7 +39,7 @@ Servo servokol;
 #define ks_S3 29
 #define ks_SOut 31
 
-#define pwm 40
+#define pwm 60
 #define kp 6
 #define ideal 7
 unsigned long t = 0;
@@ -93,8 +93,8 @@ void fren() { //TAMAM
   digitalWrite(sol_motor2, !digitalRead(sol_motor2));
   digitalWrite(sag_motor1, !digitalRead(sag_motor1));
   digitalWrite(sag_motor2, !digitalRead(sag_motor2));
-  analogWrite(sol_pwm, 2*pwm);
-  analogWrite(sag_pwm, 2*pwm);
+  analogWrite(sol_pwm, 200);
+  analogWrite(sag_pwm, 200);
   delay(20);
 }
 void sol() { //TAMAM
@@ -384,22 +384,20 @@ void copara() {
 }
 void kutuara() {
   arka = arkasensor();
-//  delay(10);
-//  solon = solonsensor();
-//  delay(10);
-//  solarka = solarkasensor();
+  delay(10);
+  solon = solonsensor();
+  delay(10);
+  solarka = solarkasensor();
   if (arka <= 10) { // tamam
     fren();
-    dur();
-    delay(200);
     // bes_cm(arka);
     sol();
     delay(600);
     while (1) {
       arka = arkasensor();
-      //delay(10);
+      delay(10);
       solon = solonsensor();
-      //delay(10);
+      delay(10);
       solarka = solarkasensor();
       sol();
       if ((solon - solarka < 2) || (solarka - solon < 2)) {
@@ -445,48 +443,38 @@ void kutuara() {
       int solonmod = solonsensor() % 30;
       int solarkamod = solarkasensor() % 30;
       int pid;
-      while (state == 0) { // Duvardan sol arka sensorü boşa çıkartırken
+      while (state == 0) {
         solonmod = solonsensor() % 30;
         solarkamod = solarkasensor() % 30;
         pid = (solarkamod - solonmod) * 5;
-        //duvartakip(-pid);
         duvartakip(-pid);
         if (solarkasensor() > 20 && solonsensor() > 20) {
           state++;
-          fren();
-          dur();
-          delay(50);
           geri();
-          delay(800);
+          delay(850);
           fren();
           dur();
           delay(20);
           break;
         }
       }
-      delay(200);
       sag();
-      delay(700);
+      delay(800);
       while (state == 1) { // Sağa dönme
         sag();
-        delay(50);
+        delay(400);
         fren();
         dur();
-        delay(10);
+        delay(100);
         solonmod=solonsensor()%30;
         solarkamod=solarkasensor()%30;
-        if (solonmod-solarkamod<=2 ) {
+        if (solonmod-solarkamod<=2) {
           state=0;
           pid=solarkasensor()%30-solonsensor()%30;
           duvartakip(pid);
-          fren();
-          dur();
-          delay(50);
           geri();
-          delay(20);
+          delay(100);
           fren();
-          dur();
-          delay(50);
           break;
         }
 

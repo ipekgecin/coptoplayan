@@ -52,7 +52,9 @@ int solarka;
 int duvar;
 int hazne;
 int state = 0;
-
+int pid;
+int solonmod;
+int solarkamod;
 
 void duvartakip(int x)
 {
@@ -112,7 +114,6 @@ void sag() { //TAMAM
   digitalWrite(sag_motor2, HIGH);
   analogWrite(sol_pwm, pwm);
   analogWrite(sag_pwm, pwm);
-  delay(100);
 }
 
 void duvarayaklas(int x) {
@@ -178,6 +179,7 @@ int arkasensor() { //TAMAM
   mesafe = (sure / 2) / 29.1;
   if (mesafe > 200 || mesafe < 0) {
     Serial.println("Menzil Disi");
+    return 200;
   } else {
     Serial.print("Arka sensor=");
     Serial.print(mesafe);
@@ -384,21 +386,21 @@ void copara() {
 }
 void kutuara() {
   arka = arkasensor();
-//  delay(10);
-//  solon = solonsensor();
-//  delay(10);
-//  solarka = solarkasensor();
+  //  delay(10);
+  //  solon = solonsensor();
+  //  delay(10);
+  //  solarka = solarkasensor();
   if (arka <= 10) { // tamam
     fren();
     // bes_cm(arka);
     sol();
     delay(600);
     while (1) {
-      arka = arkasensor();
-      delay(10);
-      solon = solonsensor();
-      delay(10);
-      solarka = solarkasensor();
+      arka = arkasensor() % 30;
+      delay(5);
+      solon = solonsensor() % 30;
+      delay(5);
+      solarka = solarkasensor() % 30;
       sol();
       if ((solon - solarka < 2) || (solarka - solon < 2)) {
         sol();
@@ -407,12 +409,12 @@ void kutuara() {
         dur();
         delay(100);
         arka = arkasensor();
-        delay(10);
+        delay(5);
         solon = solonsensor();
-        delay(10);
+        delay(5);
         solarka = solarkasensor();
 
-        if (!(arka < 15) && (solarka < 15) && (solon < 15)) {
+        if (!(arka < 15) && (solarka < 15) && (solon < 15) && (duvar<15)) {
           break;
         }
 
@@ -432,48 +434,62 @@ void kutuara() {
         int sensor = solarkasensor();
         t = millis();
         fark =  ideal - sensor ;
-        hata = ((fark) * 20 + 10 * ((fark - fark2) / t)) / 2;
+        hata = ((fark) * 8 + 10 * ((fark - fark2) / t)) / 5;
         fark2 = fark;
         duvarayaklas(-hata);
-        delay(150);
+        delay(200);
         duvarayaklas(hata);
         delay(100);
       }
     } else {
-      int solonmod = solonsensor() % 30;
-      int solarkamod = solarkasensor() % 30;
-      int pid;
+      solonmod = solonsensor() % 30;
+      solarkamod = solarkasensor() % 30;
       while (state == 0) { // Duvardan sol arka sensorü boşa çıkartırken
         solonmod = solonsensor() % 30;
         solarkamod = solarkasensor() % 30;
         pid = (solarkamod - solonmod) * 5;
         duvartakip(-pid);
-        if (solarkasensor() > 20 && solonsensor() > 20) {
+        if (solonmod - solarkamod < 3) {
+          Serial.println("MOD");
+          //geri();
+          //delay(900);
           state++;
-          geri();
-          delay(800);
-          fren();
-          dur();
-          delay(20);
           break;
         }
       }
+      duvar=duvarsensor();
+      while (duvar < 37) {
+        duvar=duvarsensor();
+        solonmod = solonsensor() % 30;
+        solarkamod = solarkasensor() % 30;
+        pid = (solarkamod - solonmod) * 10;
+        duvartakip(-pid);
+      }
+      fren();
+      dur();
+      delay(1000);
       sag();
       delay(800);
       while (state == 1) { // Sağa dönme
         sag();
-        delay(400);
+        delay(250);
         fren();
         dur();
         delay(100);
-        solonmod=solonsensor()%30;
-        solarkamod=solarkasensor()%30;
-        if (solonmod-solarkamod<=2) {
-          state=0;
-          pid=solarkasensor()%30-solonsensor()%30;
-          duvartakip(pid);
-          geri();
-          delay(100);
+        solonmod = solonsensor() % 30;
+        solarkamod = solarkasensor() % 30;
+        arka=arkasensor();
+        if ((solonmod - solarkamod <= 2 || solarkamod - solonmod <= 2  && arka <20)) {
+          state = 0;
+          //          while(arkasensor()<15){
+          //            pid = (solarkasensor() % 30 - solonsensor() % 30)*5;
+          //            duvartakip(pid);
+          //            if(arkasensor()<15){
+          //              fren();
+          //              dur();
+          //              break;
+          //            }
+          //}
           fren();
           dur();
           break;

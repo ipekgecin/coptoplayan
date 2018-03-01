@@ -387,22 +387,22 @@ void copara() {
 void kutuara() {
   arka = arkasensor();
   //  delay(10);
-  //  solon = solonsensor();
+  solon = solonsensor();
   //  delay(10);
-  //  solarka = solarkasensor();
-  if (arka <= 10) { // tamam
+  solarka = solarkasensor();
+  if (arka <= 10) { //direkteki sensor 10 cm küçük görürse sola dönmeye başlıyor
     fren();
     // bes_cm(arka);
     sol();
     delay(600);
-    while (1) {
+    while (1) { // sola dönme hareketi
       arka = arkasensor() % 30;
       delay(5);
       solon = solonsensor() % 30;
       delay(5);
       solarka = solarkasensor() % 30;
       sol();
-      if ((solon - solarka < 2) || (solarka - solon < 2)) {
+      if ((solon - solarka < 2) || (solarka - solon < 2)) { // Bu koşul sağlanırsa
         sol();
         delay(250);
         fren();
@@ -414,10 +414,9 @@ void kutuara() {
         delay(5);
         solarka = solarkasensor();
 
-        if (!(arka < 15) && (solarka < 15) && (solon < 15) && (duvar<15)) {
+        if (!(arka < 15) && (solarka < 15) && (solon < 15)) {
           break;
         }
-
       }
     }
   } else {
@@ -442,6 +441,7 @@ void kutuara() {
         delay(100);
       }
     } else {
+      state = 0;
       solonmod = solonsensor() % 30;
       solarkamod = solarkasensor() % 30;
       while (state == 0) { // Duvardan sol arka sensorü boşa çıkartırken
@@ -450,27 +450,31 @@ void kutuara() {
         pid = (solarkamod - solonmod) * 5;
         duvartakip(-pid);
         if (solonmod - solarkamod < 3) {
-          Serial.println("MOD");
-          //geri();
-          //delay(900);
+
           state++;
           break;
         }
       }
-      duvar=duvarsensor();
-      while (duvar < 37) {
-        duvar=duvarsensor();
-        solonmod = solonsensor() % 30;
-        solarkamod = solarkasensor() % 30;
-        pid = (solarkamod - solonmod) * 10;
+      duvar = duvarsensor();
+      while (state == 1) {
+        solonmod = solonsensor() + 3 % 30;
+        solarkamod = solarkasensor() + 3 % 30;
+        pid = (solarkamod - solonmod) * 5;
+        duvar = duvarsensor();
         duvartakip(-pid);
+        if (duvar >= 36) {
+          fren();
+          dur();
+          state++;
+          break;
+        }
       }
       fren();
       dur();
-      delay(1000);
+      delay(100);
       sag();
-      delay(800);
-      while (state == 1) { // Sağa dönme
+      delay(1000);
+      while (state == 2) { // Sağa dönme
         sag();
         delay(250);
         fren();
@@ -478,9 +482,19 @@ void kutuara() {
         delay(100);
         solonmod = solonsensor() % 30;
         solarkamod = solarkasensor() % 30;
-        arka=arkasensor();
-        if ((solonmod - solarkamod <= 2 || solarkamod - solonmod <= 2  && arka <20)) {
-          state = 0;
+        arka = arkasensor();
+        if ((((solonmod - solarkamod ) || (solarkamod - solonmod ) <= 2 ) ) && arka < 45) {
+          sag();
+          delay(250);
+          solonmod = solonsensor() % 30;
+          solarkamod = solarkasensor() % 30;
+          arka = arkasensor();
+          fren();
+          dur();
+          if ((((solonmod - solarkamod ) || (solarkamod - solonmod ) < 2 ) ) && arka < 45) {
+            break;
+          }
+
           //          while(arkasensor()<15){
           //            pid = (solarkasensor() % 30 - solonsensor() % 30)*5;
           //            duvartakip(pid);
@@ -490,9 +504,6 @@ void kutuara() {
           //              break;
           //            }
           //}
-          fren();
-          dur();
-          break;
         }
 
       }

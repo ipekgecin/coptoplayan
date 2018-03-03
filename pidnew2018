@@ -143,8 +143,8 @@ void sol()
   digitalWrite(sol_motor2, HIGH);
   digitalWrite(sag_motor1, HIGH);
   digitalWrite(sag_motor2, LOW);
-  analogWrite(sol_pwm, pwm - 5);
-  analogWrite(sag_pwm, pwm - 5);
+  analogWrite(sol_pwm, pwm);
+  analogWrite(sag_pwm, pwm);
 }
 
 void sag()
@@ -163,12 +163,8 @@ void duvarayaklas(int x)
   digitalWrite(sol_motor2, HIGH);
   digitalWrite(sag_motor1, LOW);
   digitalWrite(sag_motor2, HIGH);
-  analogWrite(sol_pwm, pwm - x);
-  analogWrite(sag_pwm, pwm + x);
-  digitalWrite(sol_motor1, LOW);
-  digitalWrite(sol_motor2, HIGH);
-  digitalWrite(sag_motor1, LOW);
-  digitalWrite(sag_motor2, HIGH);
+  analogWrite(sol_pwm, 30 + x);
+  analogWrite(sag_pwm, 30 - x);
 
 }
 
@@ -421,7 +417,6 @@ void copal()
   {
     kapak_sag.write(150 - i); // servo kapağın ilk pozisyonu
     kapak_sol.write(i + 30); // servo kapağın ilk pozisyonu
-    delay(10);
   }
 }
 
@@ -619,12 +614,37 @@ void copara5()
     {
       fren();
       geri();
-      delay(400);
+      for (int i = 0; i < 40; i++) {
+            if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+              fren();
+              dur();
+              delay(10000);
+              break;
+            }
+                        delay(10);
+
+          }
       sag();
-      delay(800);
+      for (int i = 0; i < 80; i++) {
+                  delay(10);
+
+            if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+              fren();
+              dur();
+              //sol();
+              //delay(10*i);
+              delay(10000);
+              break;
+            }
+
+          }
 
       while (1) { // sola dönme hareketi
-        if (haznesensor() < 10 && (haznesensor() - duvarsensor() > 7)) {
+        if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+          fren();
+          dur();
+          sol();
+          delay(100);
           fren();
           dur();
           delay(10000);
@@ -639,11 +659,26 @@ void copara5()
         sag();
         if ((solon - solarka < 2) || (solarka - solon < 2)) { // Bu koşul sağlanırsa
           sag();
-          delay(250);
+          for (int i = 0; i < 25; i++) {
+            delay(10);
+            if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+              fren();
+              dur();
+              delay(10000);
+              break;
+            }
+          }
           fren();
           dur();
-          delay(100);
-          arka = arkasensor();
+          for (int i = 0; i < 10; i++) {
+            delay(10);
+            if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+              fren();
+              dur();
+              delay(10000);
+              break;
+            }
+          }          arka = arkasensor();
           delay(5);
           solon = solonsensor();
           delay(5);
@@ -653,8 +688,19 @@ void copara5()
             fren();
             dur();
             for (int i = 0; i < 15; i++) {
-              if (haznesensor() < 10 && (haznesensor() - duvarsensor() > 7)) {
+              if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
                 fren();
+                dur();
+                sol();
+                for (int i = 0; i < 10; i++) {
+                  delay(10);
+                  if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                    fren();
+                    dur();
+                    delay(10000);
+                    break;
+                  }
+                }                fren();
                 dur();
                 delay(10000);
                 break;
@@ -667,17 +713,45 @@ void copara5()
                 geri();
                 delay(300);
                 sag();
-                delay(100);
+                for (int i = 0; i < 10; i++) {
+                  delay(10);
+                  if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                    fren();
+                    dur();
+                    delay(10000);
+                    break;
+                  }
+                }
                 break;
               }
               delay(5);
             }
 
-            delay(300);
+            for (int i = 0; i < 30; i++) {
+              delay(10);
+              if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                fren();
+                dur();
+                delay(10000);
+                break;
+              }
+            }
             sag();
-            delay(600);
+            for (int i = 0; i < 60; i++) {
+              delay(10);
+              if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                fren();
+                dur();
+                delay(10000);
+                break;
+              }
+            }
             for (tur * count; tur > 0; tur--) {
-              if (haznesensor() < 10 && (haznesensor() - duvarsensor() > 7)) {
+              if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                fren();
+                dur();
+                sol();
+                delay(100);
                 fren();
                 dur();
                 delay(10000);
@@ -685,8 +759,15 @@ void copara5()
               }
               Serial.println("buradayım");
               sag();
-              delay(200);
-              fren();
+              for (int i = 0; i < 20; i++) {
+                delay(10);
+                if (haznesensor() < 20 && (haznesensor() - duvarsensor() > 7)) {
+                  fren();
+                  dur();
+                  delay(10000);
+                  break;
+                }
+              }              fren();
               dur();
               delay(50);
             }
@@ -702,19 +783,29 @@ void copara5()
       Serial.println("Çöp Var, duvar var");
       fren();
       dur();
+      sol();
+      delay(100);
+      fren();
+      dur();
       delay(10000);
+
     }
   } else {
     delay(20);
-    hazne=haznesensor();
+    hazne = haznesensor();
     ileri();
-    if (hazne <= 10 ) 
+    if (hazne <= 10 )
     {
       Serial.println("Çöp var duvar yok");
       fren();
       dur();
-      delay(1000);
+      sol();
+      delay(100);
+      fren();
+      dur();
+      delay(10000);
     }
+
     else
     {
       Serial.println("Çöp yok, duvar yok");
@@ -732,6 +823,7 @@ void kutuara()
   solarka = solarkasensor();
   if (arka <= 10) { //direkteki sensor 10 cm küçük görürse sola dönmeye başlıyor
     fren();
+    dur();
     // bes_cm(arka);
     sol();
     delay(600);
@@ -770,17 +862,31 @@ void kutuara()
         fark = fark * kp;
         duvartakip(fark);
       } else {
-        int sensor = solarkasensor();
+
+        int sensor = solarkasensor() % 30;
         t = millis();
         fark =  ideal - sensor ;
-        hata = ((fark) * 8 + 10 * ((fark - fark2) / t)) / 5;
+        hata = ((fark) * 10 + 8 * ((fark - fark2) / t)) / 5;
         fark2 = fark;
-        duvarayaklas(-hata);
-        delay(200);
         duvarayaklas(hata);
-        delay(100);
+        for (int i = 0; i < 10; i++) {
+          if (arkasensor() <= 11) {
+            fren();
+            dur();
+            delay(20);
+          }
+        }
+        duvarayaklas(-hata);
+        for (int i = 0; i < 10; i++) {
+          if (arkasensor() <= 11) {
+            fren();
+            dur();
+            delay(10);
+          }
+        }
       }
     } else {
+
       state = 0;
       solonmod = solonsensor() % 30;
       solarkamod = solarkasensor() % 30;
@@ -823,7 +929,7 @@ void kutuara()
         solonmod = solonsensor() % 30;
         solarkamod = solarkasensor() % 30;
         arka = arkasensor();
-        if ((((solonmod - solarkamod ) || (solarkamod - solonmod ) <= 2 ) ) && arka < 45) {
+        if ((((solonmod - solarkamod ) || (solarkamod - solonmod ) <= 2 )) ) {
           sag();
           delay(250);
           solonmod = solonsensor() % 30;
@@ -839,7 +945,23 @@ void kutuara()
     }
   }
 }
-
+void copat(){
+  for(int i=150;i>=0;i--){
+    servokol.write(i);
+    delay(50);
+  }
+  delay(500);
+  kapakac();
+  delay(3000);
+  copal();
+  delay(100);
+  for(int i=0;i<=150;i++){
+    servokol.write(i);
+    delay(100);
+  }
+  delay(1000);
+  kapakac();
+}
 void setup()
 {
   pinMode(sag_pwm, OUTPUT);
@@ -889,5 +1011,17 @@ void setup()
 
 void loop()
 {
-  copara5();
+  //copara5();
+  arkasensor();
+  solarkasensor();
+  solonsensor();
+  for(int i=0;i<2;i++){
+      copal();
+      delay(100);
+      kapakac();
+  }
+  copal();
+  renkoku(0);
+  delay(1000);
+  copat();
 }

@@ -386,13 +386,13 @@ int renkoku(int x)
       return 0; // Kırmızıysa 0
     }
 
-    else if (blue < red && blue < green && blue < 80 && (red - blue) > 40 && (red - green) > 20)
+    else if (blue < red && blue < green && blue < 77 && (red - blue) > 40 && (red - green) > 20)
     {
       Serial.println(" - (Blue Color)");
       return 2; // Maviyse 2
     }
 
-    else if (green < red && green < blue )
+    else if (green < red && green < blue+20 &&green>50)
     {
       Serial.println(" - (Green Color)");
       return 1; // Yeşilse 1
@@ -820,9 +820,6 @@ void setup()
 
 void loop()
 {
-  if (pos == 0) {
-    copara5();
-  } else if (pos == 1) {
-    kutuara();
-  }
+  renkoku(0);
+  
 }

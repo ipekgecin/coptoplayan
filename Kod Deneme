@@ -495,7 +495,7 @@ void copara5() //// BU BUBU UBUBUBUBU
         }
       }
 
-      while (hazne >= 9||duvarsensor()>4) {
+      while (hazne >= 9 || duvarsensor() > 4) {
         hazne = haznesensor();
         ileripwm(40);
       }
@@ -513,6 +513,8 @@ void copara5() //// BU BUBU UBUBUBUBU
       coprenk = renkoku(0);
       if (coprenk != 4) {
         pos = 1;
+      }else{
+        return;
       }
 
 
@@ -525,11 +527,14 @@ void copara5() //// BU BUBU UBUBUBUBU
       }
       fren();
       dur();
-      delay(100);
       copal();
-      delay(100);
+      delay(150);
+      kapakac();
+      delay(150);
       copal();
-      delay(100);
+      delay(150);
+      kapakac();
+      delay(150);
       copal();
       coprenk = renkoku(0);
       sag();
@@ -557,6 +562,8 @@ void copara5() //// BU BUBU UBUBUBUBU
           if ((solarka - solon < 2) || (solon - solarka < 2) && !(duvar < 5)) {
             if (coprenk != 4) {
               pos = 1;
+            }else{
+              return;
             }
             break;
           }
@@ -567,80 +574,44 @@ void copara5() //// BU BUBU UBUBUBUBU
     }
 
   } else {
-    if (haznesensor() <= 25 && haznesensor() - duvarsensor() > 9)
-    {
-      Serial.println("Çöp var duvar yok");
-      hazne=haznesensor();
-      
-      while (hazne >10) {
-        hazne=haznesensor();//sorun lu
-        ileripwm(40);
-      }
+    ileri();
+    if (haznesensor() < 9) {
       fren();
       dur();
       copal();
-      delay(150);
+      delay(200);
       kapakac();
-      delay(150);
+      delay(200);
       copal();
-      delay(150);
+      delay(200);
       kapakac();
-      delay(150);
+      delay(200);
       copal();
       coprenk = renkoku(0);
+
       if (coprenk != 4) {
         pos = 1;
+      }else{
+        return;
       }
-    }
-
-    else
-    {
-      Serial.println("Çöp yok, duvar yok");
-      ileri();
-      
     }
   }
 }
 ///////////////////////////////////////////////KOL//////////////////////////////////
 void kolkaldir() {
-  int x = 1;
   int i = 0;
-  //servokol.write(180);
-  kuturenk = renkoku(x);
 
-  if (kuturenk == 0) {
-    for (i = 130; i <= 30; i--) {
-      servokol.write(i);
-      delay(50);
-    }
+  for (i = 130; i <= 0; i--) {
+    servokol.write(i);
+    delay(50);
   }
-
-  if (kuturenk == 1) {
-    for (i = 130; i <= 50; i--) {
-      servokol.write(i);
-      delay(50);
-    }
-  }
-
-  if (kuturenk == 2) {
-    for (i = 130; i <= 0; i--) {
-      servokol.write(i);
-      delay(50);
-    }
-  }
-
-  if (kuturenk == 3) {
-    for (i = 130; i <= 80; i--) {
-      servokol.write(i);
-      delay(50);
-    }
-  }
-
-  if (kuturenk == 4) {
-    for (i = 130; i <= 600; i--) {
-      servokol.write(i);
-      delay(50);
-    }
+  kapakac();
+  delay(1000);
+  copal();
+  delay(100);
+  for (i = 0; i <= 130; i++) {
+    servokol.write(i);
+    delay(50);
   }
 }
 
@@ -656,6 +627,17 @@ void kutuara() //HEMEN HEMEN TAMAM
   if (arka <= 10) { //direkteki sensor 10 cm küçük görürse sola dönmeye başlıyor
     fren();
     dur();
+    kuturenk = renkoku(1);
+    if (kuturenk == coprenk) {
+      kolkaldir();
+      delay(100);
+      coprenk=renkoku(0);
+      if(coprenk==4){
+        pos=0;
+      }else{
+        return;
+      }
+    }
     // bes_cm(arka);
     sol();
     delay(600);
@@ -777,23 +759,7 @@ void kutuara() //HEMEN HEMEN TAMAM
     }
   }
 }
-void copat() {
-  for (int i = 150; i >= 0; i--) {
-    servokol.write(i);
-    delay(50);
-  }
-  delay(500);
-  kapakac();
-  delay(3000);
-  copal();
-  delay(100);
-  for (int i = 0; i <= 150; i++) {
-    servokol.write(i);
-    delay(100);
-  }
-  delay(1000);
-  kapakac();
-}
+
 void setup()
 {
   pinMode(sag_pwm, OUTPUT);
@@ -837,6 +803,7 @@ void setup()
   kapak_sol.write(30); // kapalı 180 açık 30
   servokol.attach(51);
   servokol.write(130);  // servonun ilk pozisyon açısı
+  delay(1000);
   // delY 50 HERBİR İ DEN SONRA FORUN İÇİNDE
   Serial.begin(9600);
 }

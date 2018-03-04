@@ -329,24 +329,24 @@ int renkoku(int x)
     Serial.print(green, DEC);
     Serial.print(" B Intensity : ");
     Serial.print(blue, DEC);
-    if (red < blue && red < green && red < 210 && green > 300)
+    if (red < blue && red < green && red < 240 && green > 285)
     {
       Serial.println(" - (Red Color)");
       return 0; // Kırmızıysa 0
     }
 
-    else if (blue < red && blue < green && blue < 260 && green > 300)
+    else if (blue < red && blue < green && blue < 325 && green > 400)
     {
       Serial.println(" - (Blue Color)");
       return 2; // Maviyse 2
     }
 
-    else if (green < red && green - blue < 30 && green < 300 )
+    else if (green < red && green - blue < 100 && green < 480 )
     {
       Serial.println(" - (Green Color)");
       return 1; // Yeşilse 1
     }
-    else if ((blue - red) > 15 && green < 300) {
+    else if ((blue - red) > 80 && green < 300) {
       Serial.println(" - (Yellow Color)");
       return 3; // Sarıysa 3
     }
